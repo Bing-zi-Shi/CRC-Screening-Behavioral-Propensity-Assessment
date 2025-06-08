@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>结直肠癌筛查行为评估工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .user-type-selection {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .user-type-btn {
+            padding: 15px 30px;
+            margin: 10px;
+            border: 2px solid #2196F3;
+            background: white;
+            color: #2196F3;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .user-type-btn:hover, .user-type-btn.selected {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .instruction {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .question {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #fafafa;
+            border-radius: 10px;
+            border-left: 4px solid #2196F3;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #333;
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 80px;
+        }
+        
+        .option input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        
+        .option label {
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            cursor: pointer;
+            line-height: 1.2;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+        
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(45deg, #2196F3, #21CBF3);
+            transition: width 0.3s;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .result-level {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .result-description {
+            font-size: 16px;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .recommendations {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .recommendations h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recommendations li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+        
+        .recommendations li:before {
+            content: "✓ ";
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .options {
+                flex-direction: column;
+            }
+            
+            .option {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 10px;
+                background: white;
+                border-radius: 8px;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>结直肠癌筛查行为评估工具</h1>
+            <p>基于机器学习模型的个性化评估系统</p>
+        </div>
+        
+        <div class="content">
+            <!-- 第0页：用户类型选择 -->
+            <div class="page active" id="page-0">
+                <div class="section">
+                    <div class="section-title">请选择您的身份</div>
+                    <div class="user-type-selection">
+                        <button class="user-type-btn" onclick="selectUserType('resident')">社区居民</button>
+                        <button class="user-type-btn" onclick="selectUserType('healthcare')">医务人员</button>
+                    </div>
+                </div>
+                <div class="navigation">
+                    <div></div>
+                    <button class="btn btn-primary" onclick="nextPage()" id="start-btn" disabled>开始评估</button>
+                </div>
+            </div>
+            
+            <!-- 第1页：自我效能 -->
+            <div class="page" id="page-1">
+                <div class="progress-bar">
+                    <div class="progress" style="width: 25%"></div>
+                </div>
+                <div class="section">
+                    <div class="section-title">自我效能评估</div>
+                    <div class="instruction">
+                        请根据您的实际情况，选择最符合您想法的选项。
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">32. 我知道如何定期进行肠癌筛查</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q32" value="1" id="q32_1">
+                                <label for="q32_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q32" value="2" id="q32_2">
+                                <label for="q32_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q32" value="3" id="q32_3">
+                                <label for="q32_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q32" value="4" id="q32_4">
+                                <label for="q32_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q32" value="5" id="q32_5">
+                                <label for="q32_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">33. 我有信心可以按计划安排定期进行肠癌筛查</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q33" value="1" id="q33_1">
+                                <label for="q33_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q33" value="2" id="q33_2">
+                                <label for="q33_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q33" value="3" id="q33_3">
+                                <label for="q33_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q33" value="4" id="q33_4">
+                                <label for="q33_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q33" value="5" id="q33_5">
+                                <label for="q33_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">34. 如果曾经患过肠癌，我也会继续定期进行肠癌筛查</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q34" value="1" id="q34_1">
+                                <label for="q34_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q34" value="2" id="q34_2">
+                                <label for="q34_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q34" value="3" id="q34_3">
+                                <label for="q34_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q34" value="4" id="q34_4">
+                                <label for="q34_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q34" value="5" id="q34_5">
+                                <label for="q34_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">35. 我能够识别正常和异常的排便习惯改变</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q35" value="1" id="q35_1">
+                                <label for="q35_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q35" value="2" id="q35_2">
+                                <label for="q35_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q35" value="3" id="q35_3">
+                                <label for="q35_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q35" value="4" id="q35_4">
+                                <label for="q35_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q35" value="5" id="q35_5">
+                                <label for="q35_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">36. 如果我定期进行肠癌筛查，我能够在早期就发现肠癌</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q36" value="1" id="q36_1">
+                                <label for="q36_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q36" value="2" id="q36_2">
+                                <label for="q36_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q36" value="3" id="q36_3">
+                                <label for="q36_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q36" value="4" id="q36_4">
+                                <label for="q36_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q36" value="5" id="q36_5">
+                                <label for="q36_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="prevPage()">上一页</button>
+                    <button class="btn btn-primary" onclick="nextPage()">下一页</button>
+                </div>
+            </div>
+            
+            <!-- 第2页：感知益处 -->
+            <div class="page" id="page-2">
+                <div class="progress-bar">
+                    <div class="progress" style="width: 50%"></div>
+                </div>
+                <div class="section">
+                    <div class="section-title">感知益处评估</div>
+                    <div class="instruction">
+                        请根据您对结直肠癌筛查益处的认知，选择最符合您想法的选项。
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">13. 在未来10年内，我便有可能得肠癌</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q13" value="1" id="q13_1">
+                                <label for="q13_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q13" value="2" id="q13_2">
+                                <label for="q13_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q13" value="3" id="q13_3">
+                                <label for="q13_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q13" value="4" id="q13_4">
+                                <label for="q13_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q13" value="5" id="q13_5">
+                                <label for="q13_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">14. 如果我定期做肠癌相关检查，我将不会那么担心肠癌</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q14" value="1" id="q14_1">
+                                <label for="q14_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q14" value="2" id="q14_2">
+                                <label for="q14_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q14" value="3" id="q14_3">
+                                <label for="q14_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q14" value="4" id="q14_4">
+                                <label for="q14_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q14" value="5" id="q14_5">
+                                <label for="q14_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">15. 定期做检查可以让我及早发现癌症病变</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q15" value="1" id="q15_1">
+                                <label for="q15_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q15" value="2" id="q15_2">
+                                <label for="q15_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q15" value="3" id="q15_3">
+                                <label for="q15_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q15" value="4" id="q15_4">
+                                <label for="q15_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q15" value="5" id="q15_5">
+                                <label for="q15_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">16. 如果定期做肠癌相关检查，将会降低死于肠癌的可能性</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q16" value="1" id="q16_1">
+                                <label for="q16_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q16" value="2" id="q16_2">
+                                <label for="q16_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q16" value="3" id="q16_3">
+                                <label for="q16_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q16" value="4" id="q16_4">
+                                <label for="q16_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q16" value="5" id="q16_5">
+                                <label for="q16_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">17. 如果定期做肠癌筛查，即使患肠癌，会降低接受重大手术的机会，即手术难度会降低</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q17" value="1" id="q17_1">
+                                <label for="q17_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q17" value="2" id="q17_2">
+                                <label for="q17_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q17" value="3" id="q17_3">
+                                <label for="q17_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q17" value="4" id="q17_4">
+                                <label for="q17_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q17" value="5" id="q17_5">
+                                <label for="q17_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">18. 如果定期做肠癌筛查，将会有助于我早期发现一些健康问题，比如癌前病变甚至癌症</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q18" value="1" id="q18_1">
+                                <label for="q18_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q18" value="2" id="q18_2">
+                                <label for="q18_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q18" value="3" id="q18_3">
+                                <label for="q18_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q18" value="4" id="q18_4">
+                                <label for="q18_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q18" value="5" id="q18_5">
+                                <label for="q18_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="prevPage()">上一页</button>
+                    <button class="btn btn-primary" onclick="nextPage()">下一页</button>
+                </div>
+            </div>
+            
+            <!-- 第3页：健康素养 -->
+            <div class="page" id="page-3">
+                <div class="progress-bar">
+                    <div class="progress" style="width: 75%"></div>
+                </div>
+                <div class="section">
+                    <div class="section-title">健康素养评估</div>
+                    <div class="instruction">
+                        下列问题用于了解您的健康素养状况，请根据自己的实际情况选择最符合您实际情况的选项。
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">1. 您是否能够找到有关疾病预防的信息？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q1" value="1" id="q1_1">
+                                <label for="q1_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="2" id="q1_2">
+                                <label for="q1_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="3" id="q1_3">
+                                <label for="q1_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="4" id="q1_4">
+                                <label for="q1_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q1" value="5" id="q1_5">
+                                <label for="q1_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. 您是否能够理解医生或护士告知您的健康建议？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q2" value="1" id="q2_1">
+                                <label for="q2_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="2" id="q2_2">
+                                <label for="q2_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="3" id="q2_3">
+                                <label for="q2_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="4" id="q2_4">
+                                <label for="q2_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q2" value="5" id="q2_5">
+                                <label for="q2_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. 您是否能判断健康相关信息是否可信？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q3" value="1" id="q3_1">
+                                <label for="q3_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="2" id="q3_2">
+                                <label for="q3_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="3" id="q3_3">
+                                <label for="q3_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="4" id="q3_4">
+                                <label for="q3_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q3" value="5" id="q3_5">
+                                <label for="q3_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. 您是否能根据健康建议做出合理决策？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q4" value="1" id="q4_1">
+                                <label for="q4_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="2" id="q4_2">
+                                <label for="q4_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="3" id="q4_3">
+                                <label for="q4_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="4" id="q4_4">
+                                <label for="q4_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q4" value="5" id="q4_5">
+                                <label for="q4_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. 您是否能理解药品说明书上的信息？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q5" value="1" id="q5_1">
+                                <label for="q5_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="2" id="q5_2">
+                                <label for="q5_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="3" id="q5_3">
+                                <label for="q5_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="4" id="q5_4">
+                                <label for="q5_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q5" value="5" id="q5_5">
+                                <label for="q5_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">6. 您是否能够与医生、护士等健康服务人员有效沟通？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q6" value="1" id="q6_1">
+                                <label for="q6_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="2" id="q6_2">
+                                <label for="q6_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="3" id="q6_3">
+                                <label for="q6_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="4" id="q6_4">
+                                <label for="q6_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q6" value="5" id="q6_5">
+                                <label for="q6_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">7. 遇到健康相关问题时，您是否知道去哪儿寻求帮助？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q7" value="1" id="q7_1">
+                                <label for="q7_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="2" id="q7_2">
+                                <label for="q7_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="3" id="q7_3">
+                                <label for="q7_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="4" id="q7_4">
+                                <label for="q7_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q7" value="5" id="q7_5">
+                                <label for="q7_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">8. 您是否能比较不同治疗方法的利弊？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q8" value="1" id="q8_1">
+                                <label for="q8_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="2" id="q8_2">
+                                <label for="q8_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="3" id="q8_3">
+                                <label for="q8_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="4" id="q8_4">
+                                <label for="q8_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q8" value="5" id="q8_5">
+                                <label for="q8_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">9. 您是否能独立完成健康相关表格或记录？</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="q9" value="1" id="q9_1">
+                                <label for="q9_1">完全不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q9" value="2" id="q9_2">
+                                <label for="q9_2">不会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q9" value="3" id="q9_3">
+                                <label for="q9_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q9" value="4" id="q9_4">
+                                <label for="q9_4">会</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="q9" value="5" id="q9_5">
+                                <label for="q9_5">完全会</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="prevPage()">上一页</button>
+                    <button class="btn btn-primary" onclick="nextPage()">下一页</button>
+                </div>
+            </div>
+            
+            <!-- 第4页：感知易感性 -->
+            <div class="page" id="page-4">
+                <div class="progress-bar">
+                    <div class="progress" style="width: 100%"></div>
+                </div>
+                <div class="section">
+                    <div class="section-title">感知易感性评估</div>
+                    <div class="instruction">
+                        请根据您对结直肠癌风险的感知，选择最符合您想法的选项。
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">1. 我将来极有可能患肠癌</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="qs1" value="1" id="qs1_1">
+                                <label for="qs1_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs1" value="2" id="qs1_2">
+                                <label for="qs1_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs1" value="3" id="qs1_3">
+                                <label for="qs1_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs1" value="4" id="qs1_4">
+                                <label for="qs1_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs1" value="5" id="qs1_5">
+                                <label for="qs1_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">2. 我会寻求一些新的信息来改善我的健康状况</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="qs2" value="1" id="qs2_1">
+                                <label for="qs2_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs2" value="2" id="qs2_2">
+                                <label for="qs2_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs2" value="3" id="qs2_3">
+                                <label for="qs2_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs2" value="4" id="qs2_4">
+                                <label for="qs2_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs2" value="5" id="qs2_5">
+                                <label for="qs2_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">3. 如果我定期做肠癌相关检查，我会很安心</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="qs3" value="1" id="qs3_1">
+                                <label for="qs3_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs3" value="2" id="qs3_2">
+                                <label for="qs3_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs3" value="3" id="qs3_3">
+                                <label for="qs3_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs3" value="4" id="qs3_4">
+                                <label for="qs3_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs3" value="5" id="qs3_5">
+                                <label for="qs3_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">4. 定期进行肠癌筛查会让我感到尴尬</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="qs4" value="5" id="qs4_1">
+                                <label for="qs4_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs4" value="4" id="qs4_2">
+                                <label for="qs4_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs4" value="3" id="qs4_3">
+                                <label for="qs4_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs4" value="2" id="qs4_4">
+                                <label for="qs4_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs4" value="1" id="qs4_5">
+                                <label for="qs4_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-text">5. 我比普通人更容易得肠癌</div>
+                        <div class="options">
+                            <div class="option">
+                                <input type="radio" name="qs5" value="1" id="qs5_1">
+                                <label for="qs5_1">完全不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs5" value="2" id="qs5_2">
+                                <label for="qs5_2">不同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs5" value="3" id="qs5_3">
+                                <label for="qs5_3">不确定</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs5" value="4" id="qs5_4">
+                                <label for="qs5_4">同意</label>
+                            </div>
+                            <div class="option">
+                                <input type="radio" name="qs5" value="5" id="qs5_5">
+                                <label for="qs5_5">完全同意</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="prevPage()">上一页</button>
+                    <button class="btn btn-primary" onclick="calculateResult()">查看结果</button>
+                </div>
+            </div>
+            
+            <!-- 第5页：结果页面 -->
+            <div class="page" id="page-5">
+                <div class="section">
+                    <div class="section-title">评估结果</div>
+                    
+                    <div class="result-card" id="result-card">
+                        <div class="result-score" id="result-score">--</div>
+                        <div class="result-level" id="result-level">计算中...</div>
+                        <div class="result-description" id="result-description">正在分析您的评估结果...</div>
+                    </div>
+                    
+                    <div class="recommendations" id="recommendations">
+                        <h3 id="recommendations-title">建议</h3>
+                        <ul id="recommendations-list">
+                            <li>正在生成个性化建议...</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="btn btn-secondary" onclick="restartAssessment()">重新评估</button>
+                    <button class="btn btn-primary" onclick="openMiniProgram()">使用健筛通</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentPage = 0;
+        let userType = '';
+        const totalPages = 5;
+        
+        function selectUserType(type) {
+            userType = type;
+            document.querySelectorAll('.user-type-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            document.getElementById('start-btn').disabled = false;
+        }
+        
+        function showPage(pageNum) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`page-${pageNum}`).classList.add('active');
+            currentPage = pageNum;
+        }
+        
+        function nextPage() {
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+            }
+        }
+        
+        function prevPage() {
+            if (currentPage > 0) {
+                showPage(currentPage - 1);
+            }
+        }
+        
+        function calculateResult() {
+            // 计算各维度得分
+            const selfEfficacy = calculateDimensionScore(['q32', 'q33', 'q34', 'q35', 'q36']);
+            const perceivedBenefits = calculateDimensionScore(['q13', 'q14', 'q15', 'q16', 'q17', 'q18']);
+            const healthLiteracy = calculateDimensionScore(['q1', 'q2', 'q3', 'q4', 'q5', 'q6', 'q7', 'q8', 'q9']);
+            const perceivedSusceptibility = calculateDimensionScore(['qs1', 'qs2', 'qs3', 'qs4', 'qs5']);
+            
+            // 基于机器学习模型权重计算总分
+            const weights = {
+                selfEfficacy: 0.35,        // 特征重要性18.0，标准化权重
+                perceivedBenefits: 0.28,   // 特征重要性14.5
+                healthLiteracy: 0.24,      // 特征重要性12.5
+                perceivedSusceptibility: 0.13  // 特征重要性10.0
+            };
+            
+            const totalScore = (
+                selfEfficacy * weights.selfEfficacy +
+                perceivedBenefits * weights.perceivedBenefits +
+                healthLiteracy * weights.healthLiteracy +
+                perceivedSusceptibility * weights.perceivedSusceptibility
+            );
+            
+            // 模拟机器学习模型预测概率
+            const probability = Math.min(Math.max((totalScore - 1) / 4, 0), 1);
+            
+            // 根据概率分层
+            let level, levelText, description, recommendations;
+            
+            if (probability >= 0.7) {
+                level = 'high';
+                levelText = '高筛查行为倾向';
+                if (userType === 'resident') {
+                    description = '您对结直肠癌筛查表现出积极的态度和较强的行为意愿。建议您及时进行筛查，并保持定期筛查的良好习惯。';
+                    recommendations = [
+                        '尽快预约并完成结直肠癌筛查检查',
+                        '建立定期筛查的时间计划',
+                        '关注筛查结果并及时随访',
+                        '向家人朋友推广筛查的重要性',
+                        '使用健筛通小程序获取更多服务'
+                    ];
+                } else {
+                    description = '该居民对结直肠癌筛查表现出积极态度和较强行为意愿，是筛查的理想对象。';
+                    recommendations = [
+                        '重点提供便民筛查服务支持',
+                        '协助完成筛查预约和时间安排',
+                        '提供筛查流程指导和准备建议',
+                        '强化积极态度，鼓励按时筛查',
+                        '引导其成为筛查宣传的积极分子'
+                    ];
+                }
+            } else if (probability >= 0.3) {
+                level = 'medium';
+                levelText = '中等筛查行为倾向';
+                if (userType === 'resident') {
+                    description = '您对结直肠癌筛查有一定的认识和意愿，但在某些方面还需要进一步提升。建议加强学习相关知识，提高筛查信心。';
+                    recommendations = [
+                        '深入学习结直肠癌筛查相关知识',
+                        '咨询医生了解个人筛查需求',
+                        '练习筛查相关操作技能',
+                        '寻求家人朋友的支持和鼓励',
+                        '使用健筛通小程序学习和练习'
+                    ];
+                } else {
+                    description = '该居民对筛查有一定认识但仍存在障碍，需要系统性的教育和支持。';
+                    recommendations = [
+                        '提供系统的筛查知识教育',
+                        '重点指导筛查操作技能',
+                        '识别并帮助解决具体障碍',
+                        '加强健康信念和价值观引导',
+                        '提供持续的支持和鼓励'
+                    ];
+                }
+            } else {
+                level = 'low';
+                levelText = '低筛查行为倾向';
+                if (userType === 'resident') {
+                    description = '您对结直肠癌筛查的认识还比较有限，建议通过学习提高认识，逐步建立筛查意识和信心。';
+                    recommendations = [
+                        '从基础知识开始系统学习',
+                        '了解结直肠癌的风险和危害',
+                        '认识早期筛查的重要价值',
+                        '寻求专业医务人员的指导',
+                        '使用健筛通小程序进行学习'
+                    ];
+                } else {
+                    description = '该居民筛查意愿较低，需要强化认知干预和深度情感支持。';
+                    recommendations = [
+                        '强化结直肠癌风险认知教育',
+                        '提供深度的情感支持和心理疏导',
+                        '进行一对一的详细沟通指导',
+                        '增加随访频次和支持强度',
+                        '必要时进行家庭动员和支持'
+                    ];
+                }
+            }
+            
+            // 显示结果
+            document.getElementById('result-score').textContent = Math.round(probability * 100) + '%';
+            document.getElementById('result-level').textContent = levelText;
+            document.getElementById('result-description').textContent = description;
+            
+            // 更新结果卡片颜色
+            const resultCard = document.getElementById('result-card');
+            if (level === 'high') {
+                resultCard.style.background = 'linear-gradient(135deg, #4CAF50 0%, #45a049 100%)';
+            } else if (level === 'medium') {
+                resultCard.style.background = 'linear-gradient(135deg, #FF9800 0%, #F57C00 100%)';
+            } else {
+                resultCard.style.background = 'linear-gradient(135deg, #f44336 0%, #d32f2f 100%)';
+            }
+            
+            // 更新建议
+            const recommendationsList = document.getElementById('recommendations-list');
+            recommendationsList.innerHTML = '';
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendationsList.appendChild(li);
+            });
+            
+            showPage(5);
+        }
+        
+        function calculateDimensionScore(questionNames) {
+            let total = 0;
+            let count = 0;
+            questionNames.forEach(name => {
+                const selected = document.querySelector(`input[name="${name}"]:checked`);
+                if (selected) {
+                    total += parseInt(selected.value);
+                    count++;
+                }
+            });
+            return count > 0 ? total / count : 3; // 默认值3（中性）
+        }
+        
+        function restartAssessment() {
+            // 清除所有选择
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            userType = '';
+            document.querySelectorAll('.user-type-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById('start-btn').disabled = true;
+            showPage(0);
+        }
+        
+        function openMiniProgram() {
+            if (userType === 'resident') {
+                alert('正在跳转到健筛通小程序...\n\n您可以在小程序中：\n• 获取更详细的筛查指导\n• 预约筛查服务\n• 查看筛查结果\n• 获得专家咨询');
+            } else {
+                alert('医务人员版功能：\n\n• 批量评估居民筛查倾向\n• 生成个性化干预建议\n• 跟踪干预效果\n• 获取培训资料');
+            }
+        }
+        
+        // 页面加载完成后显示第一页
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage(0);
+        });
+    </script>
+</body>
+</html>
+                
